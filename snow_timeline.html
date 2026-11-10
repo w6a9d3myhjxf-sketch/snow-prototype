@@ -1,0 +1,308 @@
+<!doctype html><html lang="ja"><head><meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex"><script>
+/* Prototype entry gate: client-side SHA-256 check; not server authentication. */
+(function(){
+  try { if (sessionStorage.getItem('snow_trial_auth_v1') !== 'ok') {
+    window.location.replace('index.html');
+  } } catch(e) { window.location.replace('index.html'); }
+})();
+</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>雪氷時系列｜Prototype Ver.19</title>
+<style>
+*{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",sans-serif;background:#f3f6fa;color:#172033;margin:0;padding:14px}main{max-width:1500px;margin:auto}nav,.panel{background:white;border:1px solid #d9e0eb;border-radius:10px;padding:14px;margin-bottom:12px}nav a{margin-right:16px;color:#075d9d}h1{font-size:22px;margin:8px 0}h2{font-size:17px;margin:6px 0 12px}.sheet-header{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;gap:9px}.sheet-header label{min-width:0}.sheet-header .wide{grid-column:span 2}.sheet-header .section-title{grid-column:1/-1;border-bottom:1px solid #cbd5e1;padding-top:8px;font-size:14px;font-weight:700}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}label{font-size:13px;font-weight:600;display:block}input,select,textarea{font:inherit;color:#172033;background:#fff;border:1px solid #aebcd0;border-radius:5px;padding:7px;width:100%;min-width:0}button{font:inherit;border:1px solid #a8b8c8;background:#e9f1fa;border-radius:6px;padding:8px 11px;margin:3px;cursor:pointer}button.primary{background:#1766a2;color:white;border-color:#1766a2}button.danger{color:#a42222}button:disabled{opacity:.45;cursor:default}.bar{display:flex;flex-wrap:wrap;align-items:center;gap:4px}.table-wrap{overflow:auto;border:1px solid #cad4e0;border-radius:8px}table{border-collapse:collapse;width:100%;min-width:1390px}th,td{border:1px solid #d7e0e8;padding:5px;vertical-align:middle}th{background:#e8eff8;position:sticky;top:0;z-index:1;text-align:left;font-size:13px}td input,td select{border:1px solid transparent;background:transparent;border-radius:0;padding:8px 5px;min-width:90px}td input:focus,td select:focus{background:#fff;border-color:#1976d2;outline:2px solid #b9dcff}tr:nth-child(even){background:#f7faff}tr.irregular{background:#fff5dc}td.narrow{white-space:nowrap}td.narrow button{padding:4px 7px;font-size:12px;margin:1px}.hint{font-size:13px;color:#52657b;line-height:1.6}.status{font-size:13px;color:#285e3b}.sr{position:absolute;left:-10000px}@media(max-width:640px){.sheet-header{grid-template-columns:repeat(2,minmax(0,1fr))}.sheet-header .wide{grid-column:span 2}body{padding:8px}nav,.panel{padding:10px}}@media print{nav,.bar,.hint,button{display:none!important}}
+.snow-top{display:grid;grid-template-columns:minmax(220px,280px) minmax(650px,1fr);gap:22px;align-items:start}.operation-info{display:grid;gap:14px;padding-top:8px}.vehicles{min-width:680px;table-layout:fixed}.vehicles th:first-child{width:48px}.vehicles td{padding:3px}.vehicles td input,.vehicles td select{min-width:0;width:100%;border:1px solid #cbd5e1;border-radius:4px;background:#fff;padding:8px 5px}.vehicle-info h2{margin-bottom:8px}@media(max-width:900px){.snow-top{grid-template-columns:1fr}.operation-info{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:640px){.operation-info{grid-template-columns:1fr}}
+
+/* Prototype Ver.14: original table design retained; no horizontal scrolling */
+html,body,main,.panel,.snow-top,.vehicle-info,.table-wrap{min-width:0;max-width:100%}
+.table-wrap{overflow-x:hidden;overflow-y:visible}
+/* Remove original 1390px minimum and distribute columns inside viewport */
+#rows{width:100%}
+section.panel:has(#rows) table{width:100%;min-width:0;table-layout:fixed}
+section.panel:has(#rows) th,section.panel:has(#rows) td{min-width:0;overflow-wrap:anywhere;word-break:normal;padding:4px 2px}
+section.panel:has(#rows) th{font-size:clamp(9px,.8vw,13px)}
+section.panel:has(#rows) td input,section.panel:has(#rows) td select{width:100%;min-width:0;max-width:100%;padding:6px 1px;font-size:clamp(10px,.85vw,14px)}
+section.panel:has(#rows) th:nth-child(1){width:3%!important}
+section.panel:has(#rows) th:nth-child(2){width:8%!important}
+section.panel:has(#rows) th:nth-child(3),section.panel:has(#rows) th:nth-child(4){width:8%!important}
+section.panel:has(#rows) th:nth-child(5){width:10%!important}
+section.panel:has(#rows) th:nth-child(6){width:9%!important}
+section.panel:has(#rows) th:nth-child(7){width:10%!important}
+section.panel:has(#rows) th:nth-child(8){width:14%!important}
+section.panel:has(#rows) th:nth-child(9){width:10%!important}
+section.panel:has(#rows) th:nth-child(10){width:12%!important}
+section.panel:has(#rows) th:nth-child(11){width:8%!important}
+section.panel:has(#rows) td.narrow{white-space:normal}
+section.panel:has(#rows) td.narrow button{margin:1px;padding:3px 4px}
+/* Vehicle registration must also fit */
+.vehicles{width:100%;min-width:0;table-layout:fixed}
+.vehicles th,.vehicles td{padding:3px;overflow-wrap:anywhere}
+.vehicles th:first-child{width:7%}
+.vehicles td input,.vehicles td select{width:100%;min-width:0;padding:6px 2px}
+@media(max-width:900px){
+  .snow-top{grid-template-columns:minmax(0,1fr)}
+  .operation-info{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+/* Narrow devices: retain tabular appearance but show each original cell as a labeled table row.
+   This avoids illegible 11-column compression without horizontal scrolling. */
+@media(max-width:700px){
+  .operation-info{grid-template-columns:1fr}
+  section.panel:has(#rows) table,section.panel:has(#rows) tbody{display:block;width:100%}
+  section.panel:has(#rows) thead{display:none}
+  section.panel:has(#rows) tbody tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);width:100%;margin:0 0 10px;border:1px solid #cbd5e1;background:#fff}
+  section.panel:has(#rows) tbody tr.irregular{background:#fff5dc}
+  section.panel:has(#rows) tbody tr td{display:contents}
+  section.panel:has(#rows) tbody tr td::before{content:none}
+  section.panel:has(#rows) tbody tr td > input,section.panel:has(#rows) tbody tr td > select{min-width:0;width:100%;font-size:14px;padding:7px 5px;border:1px solid #d7e0e8;background:transparent}
+  section.panel:has(#rows) tbody tr td:first-child{display:block;grid-column:1/-1;background:#e8eff8;padding:6px 8px;font-weight:700}
+  section.panel:has(#rows) tbody tr td:nth-child(n+2){display:flex;min-width:0;align-items:center;border-top:1px solid #d7e0e8;padding:3px 4px;grid-column:1/-1}
+  section.panel:has(#rows) tbody tr td:nth-child(n+2)::before{flex:0 0 38%;font-size:12px;font-weight:700;padding:4px;color:#172033}
+  section.panel:has(#rows) tbody tr td:nth-child(2)::before{content:'区分'}
+  section.panel:has(#rows) tbody tr td:nth-child(3)::before{content:'予定時刻'}
+  section.panel:has(#rows) tbody tr td:nth-child(4)::before{content:'実績時刻'}
+  section.panel:has(#rows) tbody tr td:nth-child(5)::before{content:'作業区分'}
+  section.panel:has(#rows) tbody tr td:nth-child(6)::before{content:'作業区分2'}
+  section.panel:has(#rows) tbody tr td:nth-child(7)::before{content:'路線'}
+  section.panel:has(#rows) tbody tr td:nth-child(8)::before{content:'作業区間・地点'}
+  section.panel:has(#rows) tbody tr td:nth-child(9)::before{content:'本線・ランプ'}
+  section.panel:has(#rows) tbody tr td:nth-child(10)::before{content:'備考'}
+  section.panel:has(#rows) tbody tr td:nth-child(11)::before{content:'行操作'}
+  section.panel:has(#rows) tbody tr td.narrow{flex-wrap:wrap}
+  .vehicles th{font-size:10px;padding:2px}
+  .vehicles td input,.vehicles td select{font-size:12px;padding:5px 1px}
+}
+
+/* 行操作の3ボタンを常に横一列に固定。その他の列幅を再配分 */
+section.panel:has(#rows) th:nth-child(1){width:3%!important}
+section.panel:has(#rows) th:nth-child(2){width:7%!important}
+section.panel:has(#rows) th:nth-child(3),section.panel:has(#rows) th:nth-child(4){width:7%!important}
+section.panel:has(#rows) th:nth-child(5){width:9%!important}
+section.panel:has(#rows) th:nth-child(6){width:8%!important}
+section.panel:has(#rows) th:nth-child(7){width:9%!important}
+section.panel:has(#rows) th:nth-child(8){width:12%!important}
+section.panel:has(#rows) th:nth-child(9){width:9%!important}
+section.panel:has(#rows) th:nth-child(10){width:13%!important}
+section.panel:has(#rows) th:nth-child(11){width:16%!important}
+section.panel:has(#rows) td.narrow{white-space:nowrap!important;overflow-wrap:normal!important}
+section.panel:has(#rows) td.narrow button{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;min-width:0;width:calc((100% - 6px)/3);margin:0 1px;padding:4px 0;font-size:clamp(11px,1vw,13px);line-height:1.3}
+@media(max-width:700px){
+ section.panel:has(#rows) tbody tr td.narrow{flex-wrap:nowrap!important}
+ section.panel:has(#rows) tbody tr td.narrow::before{flex:0 0 38%}
+ section.panel:has(#rows) tbody tr td.narrow button{flex:1 1 0;width:auto;min-width:0;margin:0 1px;padding:6px 0;font-size:14px}
+}
+[hidden]{display:none!important}</style><style>
+.time-editor{display:flex;align-items:center;gap:2px;width:100%;min-width:0}
+section.panel:has(#rows) .time-editor input{min-width:0;width:100%;flex:1 1 auto;padding:5px 1px;font-size:12px}
+section.panel:has(#rows) .time-editor .now-btn{flex:0 0 24px;width:24px;min-width:24px;margin:0;padding:5px 0;font-size:15px;line-height:1.2;background:#e7f1fc;border:1px solid #b6cbe1;border-radius:4px}
+section.panel:has(#rows) .time-editor select{flex:0 0 46px;width:46px;min-width:46px;padding:4px 0;font-size:12px;background:#f4f7fb;border:1px solid #b6cbe1;border-radius:4px}
+
+/* Ver.19: time input has its own two-line area; notes remain in saved data but are hidden in the editor. */
+section.panel:has(#rows) th:nth-child(1){width:3%!important}
+section.panel:has(#rows) th:nth-child(2){width:7%!important}
+section.panel:has(#rows) th:nth-child(3),section.panel:has(#rows) th:nth-child(4){width:16%!important}
+section.panel:has(#rows) th:nth-child(5){width:9%!important}
+section.panel:has(#rows) th:nth-child(6){width:8%!important}
+section.panel:has(#rows) th:nth-child(7){width:9%!important}
+section.panel:has(#rows) th:nth-child(8){width:12%!important}
+section.panel:has(#rows) th:nth-child(9){width:9%!important}
+section.panel:has(#rows) th:nth-child(11){width:11%!important}
+section.panel:has(#rows) th:nth-child(10),section.panel:has(#rows) td:nth-child(10){display:none!important}
+section.panel:has(#rows) .time-editor{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 40px;gap:4px;width:100%;min-width:0}
+section.panel:has(#rows) .time-editor input{grid-column:1/3;grid-row:1;width:100%;min-width:0;font-size:15px;padding:7px 4px;border:1px solid #b6cbe1;border-radius:5px;background:#fff}
+section.panel:has(#rows) .time-editor .now-btn{grid-column:3;grid-row:1;width:40px;min-width:40px;min-height:38px;margin:0;padding:3px;font-size:22px}
+section.panel:has(#rows) .time-editor select{width:100%;min-width:0;max-width:100%;font-size:14px;padding:7px 2px;border:1px solid #b6cbe1;border-radius:5px;background:#fff}
+section.panel:has(#rows) .time-editor select:nth-of-type(1){grid-column:1;grid-row:2}
+section.panel:has(#rows) .time-editor select:nth-of-type(2){grid-column:2/4;grid-row:2}
+@media(max-width:700px){
+ section.panel:has(#rows) tbody tr td:nth-child(10){display:none!important}
+ section.panel:has(#rows) tbody tr td:nth-child(3) .time-editor,section.panel:has(#rows) tbody tr td:nth-child(4) .time-editor{flex:1;min-width:0}
+ section.panel:has(#rows) .time-editor{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 48px}
+ section.panel:has(#rows) .time-editor .now-btn{width:48px;min-width:48px}
+}
+</style><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="雪氷時系列"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#f1f5f9"><link rel="manifest" href="snow-manifest.webmanifest"></head><body><main><div role="status" style="background:#fff3cd;color:#694c00;border:1px solid #e3c77b;border-radius:7px;padding:9px 12px;margin-bottom:12px;font-weight:600">Prototype Ver.19／試験運用中・動作保証なし</div>
+<nav><strong>Prototype Menu</strong>　<a href="snow_timeline.html" aria-current="page">雪氷時系列</a>　<a href="snow_courses.html">コース登録</a>　<a href="gnss.html" onclick="return authenticateMenu(event, this)">GNSS</a>　<a href="#" onclick="return authenticateMenu(event, this)">Setting</a></nav>
+<section class="panel"><h1>雪氷時系列編集 <small style="font-size:11px;font-weight:400;color:#64748b">Prototype Ver.19</small></h1>
+<div class="course-toolbar" style="margin:12px 0 16px;padding:14px;border:1px solid #94a3b8;border-radius:9px;background:#f1f5f9"><div style="font-weight:600;margin-bottom:8px">登録済みコース</div><div class="bar"><label>コース名<select id="courseTemplates"><option value="">コースを選択</option></select></label><button id="applyCourse">コースを呼び出す</button><a class="course-link" href="snow_courses.html">コース登録ページへ</a></div><p class="hint">コースを呼び出すと、登録された作業区分・作業区分2・路線・作業区間・地点・本線・ランプを時系列表に反映します。予定・実績時刻などはコース登録に含みません。</p></div>
+<div class="bar" style="margin-top:12px"><button id="new" class="primary">新しい時系列</button><label style="display:flex;flex-direction:column;align-items:flex-start;gap:5px">保存済み時系列<select id="docs" style="min-width:220px"></select></label><button id="save" class="primary">保存</button><button id="pdf">PDF出力</button><button id="csv">CSV出力</button><button id="delDoc" class="danger">この時系列を削除</button></div><p class="status" id="status" aria-live="polite"></p>
+<div class="snow-top">
+  <div class="operation-info">
+    <label>開局日時<input id="openAt" type="datetime-local"></label>
+    <label>作業区分<select id="workCategory"><option value="">選択</option><option value="散布">散布</option><option value="除雪">除雪</option></select></label>
+    <label>作業コース<input id="course" placeholder="例：東北道 下り Aコース"></label>
+    <label>前回剤残量（t）<input id="prevAgent" type="number" min="0" step="0.5" inputmode="decimal" placeholder="数値を入力"></label>
+    <label>前回溶液残量（kL）<input id="prevSolution" type="number" min="0" step="0.1" inputmode="decimal" placeholder="数値を入力"></label>
+    <label>今回剤積込量（t）<input id="loadedAgent" type="number" min="0" step="0.5" inputmode="decimal" placeholder="数値を入力"></label>
+    <label>今回溶液積込量（kL）<input id="loadedSolution" type="number" min="0" step="0.1" inputmode="decimal" placeholder="数値を入力"></label>
+    <label>今回剤使用量（t）<input id="usedAgent" type="number" min="0" step="0.5" inputmode="decimal" placeholder="数値を入力"></label>
+    <label>今回溶液使用量（kL）<input id="usedSolution" type="number" min="0" step="0.1" inputmode="decimal" placeholder="数値を入力"></label>
+  </div>
+  <div class="vehicle-info"><h2>車両登録（最大5台）</h2><div class="table-wrap"><table class="vehicles"><thead><tr><th>No.</th><th>車両種別</th><th>車両ナンバー</th><th>無線番号</th><th>運転者名</th><th>助手名</th></tr></thead><tbody id="vehicleRows"></tbody></table></div></div>
+</div>
+</section>
+
+
+<section class="panel"><h2>時系列表</h2><div class="bar"><button id="add">末尾に行を追加</button><button id="irregular">臨時作業を追加</button></div><div class="table-wrap"><table><thead><tr><th style="width:50px">No.</th><th style="width:110px">区分</th><th style="width:180px">予定時刻</th><th style="width:180px">実績時刻</th><th style="width:150px">作業区分</th><th style="width:130px">作業区分2</th><th style="width:150px">路線</th><th style="width:200px">作業区間・地点</th><th style="width:135px">本線・ランプ</th><th>備考</th><th style="width:150px">行操作</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+</main>
+<script>
+'use strict';
+const PREFIX='kp_snow_timeline_v3_',INDEX=PREFIX+'index';const $=id=>document.getElementById(id);let current=null,dirty=false;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,9);
+const JOBS=['積込','開局','散布','部分散布','反転','回送','閉局','休憩','点検'];
+const JOB2=['','開始','終了'];
+const ROADS=['','東北道','上)東北道','下)東北道','圏央道','内)圏央道','外)圏央道','上)首都高','下)首都高','内)外環','外)外環','西)北関東道','東)北関東道'];
+const RAMPS=['','本線','一般道',...Array.from({length:26},(_,i)=>String.fromCharCode(65+i)+'ランプ')];
+const LOCATIONS={
+ '首都高':['新郷出入口','川口本線料金所','川口JCT'],
+ '外環':['川口中央IC','川口JCT','川口東IC','草加IC'],
+ '東北道':['川口JCT','新浦和IC','浦和TB','岩槻IC','蓮田PA','白岡BS','久喜白岡JCT','久喜IC','加須IC','羽生IC','羽生PA','館林IC','大島BS','佐野藤岡IC','佐野SA','岩舟JCT','岩舟BS','栃木IC'],
+ '北関東道':['岩舟JCT','佐野田沼IC'],
+ '圏央道':['坂戸IC','川島IC','桶川北本IC','桶川加納IC','菖蒲PA','白岡菖蒲IC','久喜白岡JCT','幸手IC','五霞IC','境古河IC','坂東IC','坂東PA','常総IC','つくば西SIC','つくば中央IC']
+};
+const COMMON_BASES=['加須基地','岩槻基地','桶川加納基地','境古河基地'];
+function locationChoices(road){return [...new Set([...COMMON_BASES,...(LOCATIONS[roadKey(road)]||[])])]}
+function roadKey(road){return String(road||'').replace(/^[上下内外西東]\)/,'')}
+function selectOptions(el,values,value){for(const v of values){const o=document.createElement('option');o.value=v;o.textContent=v||'選択';el.append(o)}if(value&&!values.includes(value)){const o=document.createElement('option');o.value=value;o.textContent=value+'（旧データ）';el.append(o)}el.value=value||''}
+function updateLocations(tr,road,existing){const input=tr.querySelector('[data-field="location"]');const list=tr.querySelector('datalist');if(!input||!list)return;list.replaceChildren();for(const name of locationChoices(road)){const o=document.createElement('option');o.value=name;list.append(o)}if(existing!==undefined)input.value=existing}
+const emptyRow=(kind='予定')=>({id:uid(),kind,planned:'',actual:'',job:'',job2:'',road:'',ramp:'',location:'',note:''});
+const blank=()=>normalizeVehicles({id:uid(),version:0,workDate:new Date().toLocaleDateString('sv-SE'),openAt:'',timeRange:'',vehicleType:'',vehicle:'',plate:'',radio:'',driver:'',assistantName:'',workCategory:'',course:'',prevAgent:'',prevSolution:'',loadedAgent:'',loadedSolution:'',usedAgent:'',usedSolution:'',operator:'',rows:[emptyRow()],history:[],updatedAt:''});
+const getIndex=()=>{try{return JSON.parse(localStorage.getItem(INDEX)||'[]')}catch{return []}};
+const getDoc=id=>{try{return JSON.parse(localStorage.getItem(PREFIX+id)||'null')}catch{return null}};
+const quantityFields=['prevAgent','prevSolution','loadedAgent','loadedSolution','usedAgent','usedSolution'];const quantityLabels=['前回剤残量（t）','前回溶液残量（kL）','今回剤積込量（t）','今回溶液積込量（kL）','今回剤使用量（t）','今回溶液使用量（kL）'];const vehicleTypes=['','散布車','小型散布車','除雪車','散水車','標識車','巡回車'];const fields=['openAt','workCategory','course',...quantityFields];const vehicleFields=['vehicleType','plate','radio','driver','assistantName'];const emptyVehicle=()=>({vehicleType:'',plate:'',radio:'',driver:'',assistantName:''});function normalizeVehicles(d){if(!Array.isArray(d.vehicles)){d.vehicles=Array.from({length:5},(_,i)=>i===0?Object.fromEntries(vehicleFields.map(f=>[f,d[f]||''])):emptyVehicle())}while(d.vehicles.length<5)d.vehicles.push(emptyVehicle());d.vehicles=d.vehicles.slice(0,5);return d}const rowFields=['kind','planned','actual','job','job2','road','location','ramp','note'];
+function formatQuantity(value){if(value===null||value===undefined||String(value).trim()==='')return '';const n=Number(value);return Number.isFinite(n)?n.toFixed(1):String(value)}
+function normalizeQuantity(f,v){if(v===null||v===undefined||String(v).trim()==='')return '';const n=Number(v);if(!Number.isFinite(n))return '';const step=f.endsWith('Agent')?0.5:0.1;return (Math.max(0,Math.round((n+Number.EPSILON)/step)*step)).toFixed(1)}
+function formatQuantityInputs(){for(const f of quantityFields){const el=$(f);if(el.value!=='')el.value=formatQuantity(el.value)}}
+function sync(){if(!current)return;for(const f of fields)current[f]=quantityFields.includes(f)?normalizeQuantity(f,$(f).value):$(f).value;current.workDate=(current.openAt||'').slice(0,10);document.querySelectorAll('#vehicleRows tr').forEach((tr,i)=>{for(const f of vehicleFields)current.vehicles[i][f]=tr.querySelector(`[data-vehicle-field="${f}"]`)?.value||''});
+document.querySelectorAll('#rows tr[data-id]').forEach(tr=>{const r=current.rows.find(r=>r.id===tr.dataset.id);if(r)for(const f of rowFields)r[f]=tr.querySelector(`[data-field="${f}"]`)?.value||''})}
+function setStatus(s){$('status').textContent=s}
+function refreshDocs(){const prev=current?.id;const opts=getIndex().map(id=>getDoc(id)).filter(Boolean).sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||''));$('docs').replaceChildren();for(const d of opts){const o=document.createElement('option');o.value=d.id;o.textContent=`${d.workDate||'日付未設定'} / ${d.vehicles?.[0]?.plate||d.plate||'車両未設定'} / ${d.course||'コース未設定'} / ver.${d.version}`;$('docs').append(o)}if(opts.some(d=>d.id===prev))$('docs').value=prev}
+function renderVehicles(){const body=$('vehicleRows');body.replaceChildren();current.vehicles.forEach((v,i)=>{const tr=document.createElement('tr');const no=document.createElement('td');no.textContent=i+1;tr.append(no);for(const f of vehicleFields){const td=document.createElement('td');const input=document.createElement(f==='vehicleType'?'select':'input');input.dataset.vehicleField=f;if(f==='vehicleType'){selectOptions(input,vehicleTypes,v[f]||'')}else{input.value=v[f]||'';}input.setAttribute('aria-label',`${i+1}台目 ${f}`);input.addEventListener('input',()=>{dirty=true;setStatus('未保存の変更があります')});td.append(input);tr.append(td)}body.append(tr)})}
+function render(){normalizeVehicles(current);for(const f of fields)$(f).value=quantityFields.includes(f)?normalizeQuantity(f,current[f]):current[f]||'';renderVehicles();const body=$('rows');body.replaceChildren();current.rows.forEach((r,i)=>{const tr=document.createElement('tr');tr.dataset.id=r.id;if(r.kind==='臨時')tr.className='irregular';const num=document.createElement('td');num.textContent=i+1;tr.append(num);for(const f of rowFields){const td=document.createElement('td');let el;if(f==='kind'){el=document.createElement('select');for(const k of ['予定','実績','予定＋実績','臨時']){const o=document.createElement('option');o.value=k;o.textContent=k;el.append(o)}}else if(['job','job2','road','ramp'].includes(f)){el=document.createElement('select');selectOptions(el,f==='job'?['',...JOBS]:f==='job2'?JOB2:f==='road'?ROADS:RAMPS,r[f]||'')}
+else{el=document.createElement('input');if(f==='planned'||f==='actual'){el.type='text';el.inputMode='numeric';el.placeholder='HH:MM';el.maxLength=5}else{el.type='text';if(f==='location'){const dl=document.createElement('datalist');dl.id='places_'+r.id;td.append(dl);el.setAttribute('list',dl.id)}}}
+el.dataset.field=f;if(!['job','job2','road','ramp'].includes(f))el.value=r[f]||'';
+if(f==='planned'||f==='actual'){
+ const wrapper=document.createElement('div');wrapper.className='time-editor';
+ const now=document.createElement('button');now.type='button';now.className='now-btn';now.textContent='🕒';now.title='現在時刻を入力';now.setAttribute('aria-label',`${i+1}行 ${f} に現在時刻を入力`);
+ now.addEventListener('click',()=>{const d=new Date();el.value=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');el.dispatchEvent(new Event('input',{bubbles:true}));el.focus();});
+ const hour=document.createElement('select');hour.title='時を選択';hour.setAttribute('aria-label',`${i+1}行 ${f} の時`);
+ const minute=document.createElement('select');minute.title='分を選択';minute.setAttribute('aria-label',`${i+1}行 ${f} の分`);
+ for(const [sel,label,max] of [[hour,'時',24],[minute,'分',60]]){
+   const first=document.createElement('option');first.value='';first.textContent=label;sel.append(first);
+   for(let n=0;n<max;n++){const o=document.createElement('option');o.value=String(n).padStart(2,'0');o.textContent=o.value;sel.append(o)}
+ }
+ const updatePickers=()=>{const m=/^(\d{1,2}):(\d{1,2})$/.exec(el.value.trim());if(m&&Number(m[1])<24&&Number(m[2])<60){hour.value=m[1].padStart(2,'0');minute.value=m[2].padStart(2,'0')}else{hour.value='';minute.value=''}};
+ const applyPickers=()=>{const old=/^(\d{1,2}):(\d{1,2})$/.exec(el.value.trim());const h=hour.value||(old&&Number(old[1])<24?old[1].padStart(2,'0'):'00');const m=minute.value||(old&&Number(old[2])<60?old[2].padStart(2,'0'):'00');el.value=h+':'+m;updatePickers();el.dispatchEvent(new Event('input',{bubbles:true}));};
+ hour.addEventListener('change',applyPickers);minute.addEventListener('change',applyPickers);
+ el.addEventListener('input',updatePickers);
+ wrapper.append(el,now,hour,minute);td.append(wrapper);updatePickers();
+}
+
+if(f==='road')el.addEventListener('change',()=>{updateLocations(tr,el.value);dirty=true;setStatus('未保存の変更があります')});
+if(f==='location')setTimeout(()=>updateLocations(tr,r.road,r.location||''),0);
+el.setAttribute('aria-label',`${i+1}行 ${f}`);el.addEventListener('input',()=>{dirty=true;setStatus('未保存の変更があります')});if(f==='planned'||f==='actual'){el.addEventListener('blur',()=>{const v=el.value.trim();if(!v)return;const m=/^(\d{1,2}):(\d{1,2})$/.exec(v);if(m&&Number(m[1])<24&&Number(m[2])<60){el.value=m[1].padStart(2,'0')+':'+m[2].padStart(2,'0')}else{alert('時刻は HH:MM 形式で入力してください（例：08:05）');el.focus()}})}if(f!=='planned'&&f!=='actual')td.append(el);tr.append(td)}const td=document.createElement('td');td.className='narrow';for(const [symbol,action,title] of [['↑','insertAbove','直上に空行を追加'],['↓','insertBelow','直下に空行を追加'],['×','remove','削除']]){const b=document.createElement('button');b.textContent=symbol;b.title=title;b.dataset.action=action;b.addEventListener('click',()=>editRow(r.id,action));td.append(b)}tr.append(td);body.append(tr)});setStatus(`現在の版：ver.${current.version}　${dirty?'（未保存）':'（保存済み）'}`)}
+function editRow(id,action){
+ sync();
+ const i=current.rows.findIndex(r=>r.id===id);
+ if(i<0)return;
+ if(action==='remove'){
+  if(!confirm(`${i+1}行目を削除しますか？`))return;
+  current.rows.splice(i,1);
+ }else if(action==='insertAbove'){
+  current.rows.splice(i,0,emptyRow());
+ }else if(action==='insertBelow'){
+  current.rows.splice(i+1,0,emptyRow());
+ }
+ dirty=true;
+ render();
+}
+function addRow(kind){sync();current.rows.push(emptyRow(kind));dirty=true;render()}
+function updateOpeningFromRows(){
+ const open=current.rows.find(r=>r.job==='開局'&&(r.actual||r.planned));
+ if(!open)return;
+ const t=open.actual||open.planned;
+ if(!/^\d{2}:\d{2}$/.test(t))return;
+ const base=(current.openAt||current.workDate||new Date().toLocaleDateString('sv-SE')).slice(0,10);
+ current.openAt=base+'T'+t;current.workDate=base;$('openAt').value=current.openAt;
+}
+function save(){sync();if(!current)return;updateOpeningFromRows();current.version++;current.updatedAt=new Date().toISOString();try{localStorage.setItem(PREFIX+current.id,JSON.stringify(current));const ix=getIndex();if(!ix.includes(current.id)){ix.push(current.id);localStorage.setItem(INDEX,JSON.stringify(ix))}dirty=false;refreshDocs();render();setStatus(`ver.${current.version} を保存しました`)}catch(e){current.version--;setStatus('保存に失敗：'+e.message)}}
+function guard(){return !dirty||confirm('未保存の変更があります。破棄して切り替えますか？')}
+function load(id){if(!guard())return;const d=getDoc(id);if(!d)return;current=normalizeVehicles(d);dirty=false;render();refreshDocs()}
+function csvQuote(s){return '"'+String(s??'').replace(/"/g,'""')+'"'}
+function download(blob,name){const a=document.createElement('a');const url=URL.createObjectURL(blob);a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+function baseName(){return `${current.workDate||'日付未設定'}_${(current.vehicles?.[0]?.plate||'車両未設定').replace(/[\\/:*?"<>|]/g,'_')}_ver${current.version}`}
+function csv(){sync();const header=['開局日時','作業区分（全体）','作業コース',...quantityLabels,...Array.from({length:5},(_,i)=>vehicleFields.map(f=>`${i+1}台目_${f}`)).flat(),'No','区分','予定時刻','実績時刻','作業区分','作業区分2','路線','作業区間・地点','本線・ランプ','備考'];const meta=[current.openAt,current.workCategory,current.course,...quantityFields.map(f=>formatQuantity(current[f])),...current.vehicles.flatMap(v=>vehicleFields.map(f=>v[f]))];const rows=current.rows.map((r,i)=>[...meta,i+1,r.kind,r.planned,r.actual,r.job,r.job2||'',r.road,r.location,r.ramp||'',r.note]);const txt='\uFEFF'+[header,...rows].map(row=>row.map(csvQuote).join(',')).join('\r\n');download(new Blob([txt],{type:'text/csv;charset=utf-8'}),baseName()+'.csv')}
+function pdf(){
+ sync();
+ if(dirty||!current.version){alert('PDF出力前に「保存」を押してください。');return}
+ const selectedLabel=$('docs').selectedOptions[0]?.textContent||baseName();
+ const pdfFileName=selectedLabel.replace(/[\\/:*?"<>|]/g,'_').trim()+'.pdf';
+ const title='雪氷作業時系列';
+ const rowHTML=(r,i)=>`<tr><td>${i+1}</td><td>${esc(r.kind)}</td><td>${esc(r.planned)}</td><td>${esc(r.actual)}</td><td>${esc(r.job)}</td><td>${esc(r.job2||'')}</td><td>${esc(r.road)}</td><td>${esc(r.location)}</td><td>${esc(r.ramp==='選択'?'':(r.ramp||''))}</td><td>${esc(r.note)}</td></tr>`;
+ const vrows=current.vehicles.map((v,i)=>`<tr><td>${i+1}</td>${vehicleFields.map(f=>`<td>${esc(v[f])}</td>`).join('')}</tr>`).join('');
+ const headers='<tr><th>No.</th><th>区分</th><th>予定時刻</th><th>実績時刻</th><th>作業区分</th><th>作業区分2</th><th>路線</th><th>作業区間・地点</th><th>本線・ランプ</th><th>備考</th></tr>';
+ // ページを明示的に分割し、2ページ目以降の見出しと表を別要素にする。
+ const chunks=[];
+ const all=current.rows;
+ if(all.length===0)chunks.push([]);
+ else {
+   chunks.push(all.slice(0,18).map((r,i)=>rowHTML(r,i)));
+   for(let i=18;i<all.length;i+=20)chunks.push(all.slice(i,i+20).map((r,j)=>rowHTML(r,i+j)));
+ }
+ const pages=chunks.map((chunk,i)=>`<section class="pdf-page">
+   <header class="page-title">${title}　全${chunks.length}枚中${i+1}枚</header>
+   ${i===0?`<div class="top"><div class="meta">開局日時：${esc(current.openAt)}<br>作業区分：${esc(current.workCategory)}<br>作業コース：${esc(current.course)}${quantityFields.map((f,j)=>`<br>${esc(quantityLabels[j])}：${esc(formatQuantity(current[f]))}`).join('')}</div><table class="vehicles"><thead><tr><th>No.</th><th>車両種別</th><th>車両ナンバー</th><th>無線番号</th><th>運転者名</th><th>助手名</th></tr></thead><tbody>${vrows}</tbody></table></div>`:''}
+   <table class="timeline"><thead>${headers}</thead><tbody>${chunk.join('')}</tbody></table>
+ </section>`).join('');
+ const html=`<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>${esc(pdfFileName)}</title><style>
+ @page{size:A4 landscape;margin:10mm 12mm 10mm}
+ *{box-sizing:border-box}
+ body{margin:0;font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;font-size:10px}
+ .pdf-page{break-after:page;page-break-after:always}
+ .pdf-page:last-child{break-after:auto;page-break-after:auto}
+ .page-title{font-size:15pt;font-weight:bold;line-height:1.4;margin:0 0 8mm}
+ .pdf-page:first-of-type .page-title{margin-bottom:3mm}
+ table{width:100%;border-collapse:collapse;table-layout:fixed}
+ th,td{border:1px solid #777;padding:5px;overflow-wrap:anywhere}
+ th{background:#eee}
+ tr{break-inside:avoid;page-break-inside:avoid}
+ .top{display:grid;grid-template-columns:1fr 2.4fr;gap:14px;margin:0 0 8px}
+ .meta{font-size:12px}
+ .vehicles{font-size:10px}
+ .timeline{font-size:10px}
+ .timeline th:nth-child(1){width:3%}
+ .timeline th:nth-child(2){width:7%}
+ .timeline th:nth-child(3),.timeline th:nth-child(4){width:6%}
+ .timeline th:nth-child(5),.timeline th:nth-child(6){width:12%}
+ .timeline th:nth-child(7){width:9%}
+ .timeline th:nth-child(8){width:15%}
+ .timeline th:nth-child(9){width:11%}
+ .timeline th:nth-child(10){width:19%}
+ button{margin-bottom:12px}
+ .save-help{font-size:12px}
+ @media print{button,.save-help{display:none!important}}
+ </style></head><body><button onclick="print()">印刷／PDF保存</button><p class="save-help">PDF保存時の推奨ファイル名：${esc(pdfFileName)}　（iPadでは共有メニューから「ファイルに保存」）</p>${pages}</body></html>`;
+ const w=window.open('','_blank');
+ if(!w){alert('ポップアップがブロックされました');return}
+ w.document.open();w.document.write(html);w.document.close();
+ setTimeout(()=>{w.focus();w.print()},350);
+}
+const COURSE_STORE='kp_snow_course_templates_v1';
+const templateFields=['job','job2','road','location','ramp'];
+function getTemplates(){try{const v=JSON.parse(localStorage.getItem(COURSE_STORE)||'[]');return Array.isArray(v)?v:[]}catch{return []}}
+function putTemplates(v){localStorage.setItem(COURSE_STORE,JSON.stringify(v));refreshTemplates()}
+function refreshTemplates(){const sel=$('courseTemplates'),prev=sel.value;sel.replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent='コースを選択';sel.append(blank);for(const t of getTemplates()){const o=document.createElement('option');o.value=t.id;o.textContent=t.name;sel.append(o)}if(getTemplates().some(t=>t.id===prev))sel.value=prev}
+$('applyCourse').onclick=()=>{const t=getTemplates().find(t=>t.id===$('courseTemplates').value);if(!t){alert('コースを選択してください');return}sync();if(current.rows.some(r=>templateFields.some(f=>r[f])||r.planned||r.actual||r.note)&&!confirm('現在の時系列行をコースの登録内容で置き換えます。よろしいですか？'))return;current.course=t.name;current.rows=t.rows.map(r=>({...emptyRow(),...Object.fromEntries(templateFields.map(f=>[f,r[f]||'']))}));if(!current.rows.length)current.rows=[emptyRow()];dirty=true;render()};
+refreshTemplates();
+$('new').onclick=()=>{if(!guard())return;current=blank();dirty=true;render()};$('save').onclick=save;$('add').onclick=()=>addRow('予定');$('irregular').onclick=()=>addRow('臨時');$('csv').onclick=csv;$('pdf').onclick=pdf;$('docs').onchange=e=>load(e.target.value);$('delDoc').onclick=()=>{if(!current?.version){current=blank();dirty=true;render();return}if(!confirm('この時系列と全修正履歴を端末から削除しますか？'))return;localStorage.removeItem(PREFIX+current.id);localStorage.setItem(INDEX,JSON.stringify(getIndex().filter(id=>id!==current.id)));current=blank();dirty=true;refreshDocs();render()};for(const f of fields){$(f).addEventListener('input',()=>{dirty=true;setStatus('未保存の変更があります')});if(quantityFields.includes(f))$(f).addEventListener('blur',()=>{if($(f).value!=='')$(f).value=normalizeQuantity(f,$(f).value)})}window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
+const ids=getIndex();current=ids.length?getDoc(ids[0]):null;if(current)normalizeVehicles(current);if(!current){current=blank();dirty=true}refreshDocs();render();
+</script><script>
+function authenticateMenu(event, link) {
+  event.preventDefault();
+  const password = window.prompt('Password');
+  if (password === null) return false;
+  if (password !== 'nexcokp') {
+    window.alert('Incorrect password');
+    return false;
+  }
+  if (link.textContent.trim() === 'GNSS') window.alert('GNSS page is not included in this prototype.');
+  else window.alert('Setting page is not available yet.');
+  return false;
+}
+</script></body></html>

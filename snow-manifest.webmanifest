@@ -1,0 +1,10 @@
+{
+  "name": "雪氷時系列",
+  "short_name": "雪氷時系列",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f1f5f9",
+  "theme_color": "#f1f5f9",
+  "lang": "ja"
+}
